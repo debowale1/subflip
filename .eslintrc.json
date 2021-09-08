@@ -6,11 +6,12 @@
     },
     "extends": [
         "airbnb", 
-        "prettier"
+        "prettier",
         // "plugin:node/recommended"
         // "eslint:recommended",
         // "plugin:react/recommended",
-		// "plugin:prettier/recommended"
+        "plugin:import/recommended",
+		"plugin:prettier/recommended"
     ],
     "plugins": ["prettier"],
     "parserOptions": {
@@ -21,6 +22,7 @@
         // "react/react-in-jsx-scope": "off",
         "no-console":"warn",
         "no-unused-vars":"error",
+        "object-shorthand":"off",
         "func-names":"off",
         "no-process-exit":"off",
         "prettier/prettier": [

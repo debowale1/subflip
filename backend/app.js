@@ -1,11 +1,12 @@
+/* eslint-disable import/extensions */
 import express from 'express'
 import dotenv from 'dotenv'
-import connectDb from './config/db'
+import userRouter from './routes/userRoutes.js'
 
 const app = express()
 dotenv.config()
-
-connectDb()
+// body parser
+app.use(express.json())
 
 app.get('/api/v1/ping', (req, res) => {
 	res.status(200).json({
@@ -14,11 +15,6 @@ app.get('/api/v1/ping', (req, res) => {
 	})
 })
 
-app.get('api', (req, res) => {
-	res.send('Hello')
-	process.exit(1)
-})
-
-console.log('welcome')
+app.use('/api/v1/users', userRouter)
 
 export default app

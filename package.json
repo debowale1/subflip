@@ -1,6 +1,6 @@
 {
   "name": "subflip",
-  "type": "module",
+  "type":"module",
   "version": "1.0.0",
   "description": "share subscriptions, buy courses together with your friends. This is a side/portfolio project",
   "main": "app.js",
