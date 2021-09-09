@@ -1,10 +1,16 @@
 {
   "name": "subflip",
-  "type":"module",
+  "type": "module",
   "version": "1.0.0",
   "description": "share subscriptions, buy courses together with your friends. This is a side/portfolio project",
   "main": "app.js",
   "scripts": {
+    "lint": "eslint -c .eslintrc.json \"backend/**\" --fix",
+    "test":"cross-env NODE_ENV=test mocha ./tests/**/*.test.js",
+    "holoInstall": "npm install && cd frontend && npm install",
+    "start:backend": "cross-env NODE_ENV=development nodemon backend/server.js",
+    "start:frontend": "cd frontend && npm start",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start": "nodemon backend/server.js"
   },
   "keywords": [],
@@ -13,9 +19,13 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.4"
+    "mongoose": "^6.0.4",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "concurrently": "^6.2.1",
+    "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-node": "^4.1.0",
