@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint -c .eslintrc.json \"backend/**\" --fix",
-    "test":"cross-env NODE_ENV=test mocha ./tests/**/*.test.js",
+    "test": "cross-env NODE_ENV=test mocha ./tests/**/*.test.js",
     "holoInstall": "npm install && cd frontend && npm install",
     "start:backend": "cross-env NODE_ENV=development nodemon backend/server.js",
     "start:frontend": "cd frontend && npm start",
@@ -19,6 +19,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "faker": "^5.5.3",
     "mongoose": "^6.0.4",
     "morgan": "^1.10.0"
   },

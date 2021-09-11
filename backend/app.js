@@ -23,4 +23,10 @@ app.get('/api/v1/ping', (req, res) => {
 
 app.use('/api/v1/users', userRouter)
 
+// Unknown route
+app.get('*', async (req, res) => {
+	console.log('Not Found')
+	res.redirect('/')
+})
+
 export default app
