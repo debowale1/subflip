@@ -26,7 +26,7 @@
         "func-names":"off",
         "no-process-exit":"off",
         "prettier/prettier": [
-            "error",
+            "off",
             {
               "endOfLine": "auto"
             }
