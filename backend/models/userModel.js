@@ -33,18 +33,28 @@ const userSchema = Schema({
 			},
 		},
 	},
+	role: {
+    type: String,
+    enum: {
+      values: ['user', 'admin'],
+      message: "role can only be either user, or admin"
+    },
+    default: 'user'
+  },
 	phoneNumber: {
 		type: String,
 	},
-	photo: {
-		type: String,
-	},
+	photo: String,
 	facebookUrl: {
 		type: String,
 	},
 	twitterUrl: {
 		type: String,
 	},
+}, {
+	timestamps: true,
+	toObject: { virtuals: true },
+	toJSON: { virtuals: true },
 })
 
 const User = mongoose.model('User', userSchema)
