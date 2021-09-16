@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import userRouter from './routes/userRoutes.js'
+import authRouter from './routes/authRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -21,6 +22,7 @@ app.get('/api/v1/ping', (req, res) => {
 	})
 })
 
+app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 
 // Unknown route
