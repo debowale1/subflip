@@ -12,7 +12,7 @@ const listingSchema = mongoose.Schema({
   },
   title: {
     ...requiredString,
-    required: [true, 'A lisitng must have a title']
+    required: [true, 'A listing must have a title']
   }, 
   slug: String,
   description: {
