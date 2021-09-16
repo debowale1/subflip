@@ -1,21 +1,25 @@
 import mongoose from 'mongoose'
 
 const { Schema } = mongoose
+const requiredString = {
+  type: String,
+	required: true,
+  trim: true,
+}
 const userSchema = Schema({
 	firstname: {
-		type: String,
-		required: true,
-		trim: true,
+		...requiredString,		
 	},
 	lastname: {
-		type: String,
-		required: true,
-		trim: true,
+		...requiredString
 	},
 	email: {
 		type: String,
-		unique: [true, 'email must be unique'],
+		unique: true,
 		required: [true, 'email must be provided'],
+	},
+	username: {
+		...requiredString,
 	},
 	password: {
 		type: String,
