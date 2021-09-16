@@ -30,20 +30,29 @@ const authController = {
 		}
 	},
 	// eslint-disable-next-line consistent-return
-	// createUser: async (req, res, next) => {
-	// 	console.log(req.body);
-	// 	try {
-	// 		const user = await User.create(req.body)
-	// 		res.status(201).json({
-	// 			status: 'success',
-	// 			data: {
-	// 				user,
-	// 			},
-	// 		})
-	// 	} catch (error) {
-	// 		return next(error)
-	// 	}
-	// },
+	login: async (req, res, next) => {
+		const { username, password } = req.body
+		try {
+			const user = await User.findOne({username})
+
+      if(!user || !(await user.comparePassword(password, user.password))){
+        return next(res.status(403).json({ status: 'fail', message: 'username or password is incorrect. Please try again'}))
+      }
+      // sign token 
+      const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
+        expiresIn: '90d'
+      })
+			res.status(200).json({
+				status: 'success',
+				data: {
+					user,
+          token
+				},
+			})
+		} catch (error) {
+			return next(error)
+		}
+	},
 }
 
 export default authController
