@@ -30,6 +30,9 @@
             {
               "endOfLine": "auto"
             }
-          ]
+          ],
+          "no-underscore-dangle":"warn",
+          "consistent-return":"off",
+          "no-return-await":"off"
     }
 }
