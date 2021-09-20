@@ -3,7 +3,7 @@
 import Listing from '../models/listingModel.js'
 
 const listingController = {
-  createListing: async (req, res) => {
+  create: async (req, res) => {
     // const newListing = new Listing({
 
     // })
@@ -18,6 +18,21 @@ const listingController = {
     } catch (error) {
       res.status(500).json(error)
     }
+  },
+  getAll: async (_, res,  next) => {
+    try {
+      const listings = await Listing.find().sort({ createdAt: -1}).limit(5)
+      
+      res.status(200).json({
+        status: 'success',
+        data: {
+          listings
+        }
+      })
+    } catch (error) {
+      next(res.status(500).json(error))
+    }
+
   }
 }
 
