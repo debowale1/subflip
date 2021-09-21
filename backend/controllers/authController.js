@@ -57,7 +57,7 @@ const authController = {
 		const { email } = req.body
 		try {
 			// check if email is registered
-			const user = await User.find({email})
+			const user = await User.findOne({email})
 
 			if(!user) return next(res.status(404).json({ status: 'fail', message: `User with the email does not exist. Please sign up /api/v1/auth/signup`}))
 
