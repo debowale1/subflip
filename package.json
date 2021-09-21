@@ -23,7 +23,8 @@
     "faker": "^5.5.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.4",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "xss": "^1.0.9"
   },
   "devDependencies": {
     "chai": "^4.3.4",
