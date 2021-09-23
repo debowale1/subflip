@@ -5,13 +5,20 @@ import User from '../models/userModel.js'
 
 const authController = {
 	register: async (req, res, next) => {
+		const { firstname, lastname, email, password, passwordConfirm } = req.body
 		try {
       // check if user with the email already exists
-			const user = await User.findOne({ email: req.body.email})
+			const user = await User.findOne({ email })
 
-      if(user) return next(res.status(401).json({ status: 'fail', message: 'User already exists'}))
+      if(user) return next(res.status(401).json({ status: 'fail', message: 'User already exists. Kindly log in instead'}))
 
-      const newUser = await User.create(req.body)
+      const newUser = await User.create({
+				firstname,
+				lastname,
+				email,
+				password,
+				passwordConfirm
+			})
 
       // generate a token for the user
       const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {
