@@ -62,6 +62,10 @@ const userSchema = Schema({
 	toJSON: { virtuals: true },
 })
 
+userSchema.virtual('fullname').get(function(){
+	return `${this.firstname} ${this.lastname}`
+})
+
 // pre save middleware
 userSchema.pre('save', async function(next){
 	if(!this.isModified('password')) return next()
