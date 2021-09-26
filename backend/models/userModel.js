@@ -27,6 +27,7 @@ const userSchema = Schema({
 		trim: true,
 		required: [true, 'Please provide a password'],
 		min: 8,
+		select: false
 	},
 	passwordConfirm: {
 		type: String,
