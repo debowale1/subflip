@@ -5,7 +5,7 @@ import User from '../models/userModel.js'
 const userController = {
 	getAllUser: async (_, res, next) => {
 		try {
-			const users = await User.find()
+			const users = await User.find().sort({ createdAt: -1})
 
 			res.status(200).json({
 				status: 'success',
@@ -20,13 +20,24 @@ const userController = {
 	},
 	// eslint-disable-next-line consistent-return
 	createUser: async (req, res, next) => {
-		console.log(req.body);
+		const { firstname, lastname, email, password, passwordConfirm } = req.body
 		try {
-			const user = await User.create(req.body)
+			// check if email is already registered
+			const user = await User.findOne({ email })
+			if(user){
+				return next(res.status(500).json({ status: 'Fail', message: 'User already exist. Please Login here'}))
+			}
+			const createdUser = await User.create({
+				firstname,
+				lastname,
+				email,
+				password,
+				passwordConfirm
+			})
 			res.status(201).json({
 				status: 'success',
 				data: {
-					user,
+					user: createdUser,
 				},
 			})
 		} catch (error) {

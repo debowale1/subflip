@@ -27,6 +27,7 @@ const userSchema = Schema({
 		trim: true,
 		required: [true, 'Please provide a password'],
 		min: 8,
+		select: false
 	},
 	passwordConfirm: {
 		type: String,
@@ -56,17 +57,30 @@ const userSchema = Schema({
 	twitterUrl: {
 		type: String,
 	},
+	active: {
+		type: Boolean,
+		default: false
+	}
 }, {
 	timestamps: true,
 	toObject: { virtuals: true },
 	toJSON: { virtuals: true },
 })
 
-// pre save middleware
+userSchema.virtual('fullname').get(function(){
+	return `${this.firstname} ${this.lastname}`
+})
+
+// DOCUMENT MIDDLEWARE: pre save hook
 userSchema.pre('save', async function(next){
 	if(!this.isModified('password')) return next()
 	this.password = await bcrypt.hash(this.password, 12)
 	this.passwordConfirm = undefined
+	next()
+})
+// QUERY MIDDLEWARE
+userSchema.pre(/^find/, function(next){
+	this.find({ active: true })
 	next()
 })
 
