@@ -3,10 +3,7 @@
 import Listing from '../models/listingModel.js'
 
 const listingController = {
-  create: async (req, res) => {
-    // const newListing = new Listing({
-
-    // })
+  create: async (req, res, next) => {
     try {
       const listing = await Listing.create(req.body)
       res.status(201).json({
@@ -16,7 +13,8 @@ const listingController = {
         }
       })
     } catch (error) {
-      res.status(500).json(error)
+      // res.status(500).json(error)
+      return next(error)
     }
   },
   getAll: async (_, res,  next) => {
