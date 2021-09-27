@@ -12,6 +12,10 @@ const protect = async (req, res, next) => {
     token = req.cookies.jwt
   }
 
+  if(!token){
+    return next('You are not logged in. Please log in to continue')
+  }
+
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
   const user = await User.findById(decoded.id)
