@@ -4,8 +4,10 @@ import authController from '../controllers/authController.js'
 
 const router = Router()
 
-router.route('/register').post(authController.register)
-router.route('/login').post(authController.login)
-router.route('/resetPassword').post(authController.resetPassword)
+router.post('/register', authController.register)
+router.post('/login', authController.login)
+// Password reset routes
+router.post('/forgotPassword', authController.forgotPassword)
+router.post('/resetPassword', authController.resetPassword)
 
 export default router

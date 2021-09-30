@@ -30,7 +30,7 @@ const protect = async (req, res, next) => {
 const grantAccessTo = (...roles) => {
   return (req, res, next) => {
     if(!roles.includes(req.user.role)){
-      return next(res.status(403).json({message: 'this user is not authorized to do this'}))
+      return next(res.status(403).json({message: 'this user is not authorized to perform thhis action'}))
     }
     next()
   }

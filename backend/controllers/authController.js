@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
 import jwt from 'jsonwebtoken'
+import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 
 const signToken = (id) => {
@@ -10,9 +11,8 @@ const signToken = (id) => {
 }
 
 const authController = {
-	register: async (req, res, next) => {
+	register: asyncHandler(async (req, res, next) => {
 		const { firstname, lastname, email, username, password, passwordConfirm } = req.body
-		try {
       // check if user with the email already exists
 			const user = await User.findOne({ email })
 
@@ -38,14 +38,10 @@ const authController = {
 					newUser,
 				},
 			})
-		} catch (error) {
-			return next(error)
-		}
-	},
+	}),
 	// eslint-disable-next-line consistent-return
-	login: async (req, res, next) => {
+	login: asyncHandler(async (req, res, next) => {
 		const { username, password } = req.body
-		try {
 			const user = await User.findOne({username}).select('+password')
 
       if(!user || !(await user.comparePassword(password, user.password))){
@@ -63,10 +59,32 @@ const authController = {
           token
 				},
 			})
+	}),
+
+	forgotPassword: async (req, res, next) => {
+		const { email } = req.body
+		try {
+			// check if email is registered
+			const user = await User.findOne({email})
+
+			if(!user) return next(res.status(404).json({ status: 'fail', message: `User with the email does not exist. Please sign up /api/v1/auth/signup` }))
+
+			// @TODO
+			// sendResetPasswordEmail(email)
+			const resetToken = user.createPasswordResetToken()
+
+			// save user's reset token
+			await user.save({ validateBeforeSave: false }) 
+
+			res.status(200).json({
+				status: 'success',
+				message: 'We have sent a link to your email. Follow the link to reset your password'
+			})
 		} catch (error) {
-			return next(error)
+			next(res.status(500).json(error))
 		}
 	},
+
 	resetPassword: async (req, res, next) => {
 		const { email } = req.body
 		try {
