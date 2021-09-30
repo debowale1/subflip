@@ -3,6 +3,7 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import sendEmail from '../utils/email.js'
 
 const signToken = (id) => {
 	return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -69,19 +70,29 @@ const authController = {
 
 			if(!user) return next(res.status(404).json({ status: 'fail', message: `User with the email does not exist. Please sign up /api/v1/auth/signup` }))
 
-			// @TODO
-			// sendResetPasswordEmail(email)
 			const resetToken = user.createPasswordResetToken()
-
 			// save user's reset token
 			await user.save({ validateBeforeSave: false }) 
+
+			const resetURL = `${req.protocol}://${req.get('host')}/api/v1/resetPassword/${resetToken}`
+			const message = `Forgot your password? please create a new one using this link ${resetURL}. \n If you didn't forget your password, please ignore this message.`
+
+			await sendEmail({
+				email: req.body.email,
+				subject: 'Your password reset token. (Valid for 10mins)', 
+				message
+			})
 
 			res.status(200).json({
 				status: 'success',
 				message: 'We have sent a link to your email. Follow the link to reset your password'
 			})
 		} catch (error) {
-			next(res.status(500).json(error))
+			user.resetPasswordToken = undefined
+			user.passwordTokenExpires = undefined
+			await user.save({ validateBeforeSave: true })
+
+			return next(res.status(500).json({ message: 'There was a problem sending the email. Please try again!'}))
 		}
 	},
 
