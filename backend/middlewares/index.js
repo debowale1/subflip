@@ -17,7 +17,7 @@ const protect = async (req, res, next) => {
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
-
+  // check if user still exists
   const user = await User.findById(decoded.id)
 
   if(!user) return next(res.status(401).json({ status: 'fail', message: 'The user belonging this token no longer exist'}))

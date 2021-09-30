@@ -11,7 +11,7 @@ const signToken = (id) => {
 
 const authController = {
 	register: async (req, res, next) => {
-		const { firstname, lastname, email, password, passwordConfirm } = req.body
+		const { firstname, lastname, email, username, password, passwordConfirm } = req.body
 		try {
       // check if user with the email already exists
 			const user = await User.findOne({ email })
@@ -21,6 +21,7 @@ const authController = {
       const newUser = await User.create({
 				firstname,
 				lastname,
+				username,
 				email,
 				password,
 				passwordConfirm
@@ -32,9 +33,9 @@ const authController = {
 
 			res.status(200).json({
 				status: 'success',
+				token,
 				data: {
 					newUser,
-          token
 				},
 			})
 		} catch (error) {
