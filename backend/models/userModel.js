@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
@@ -20,7 +21,7 @@ const userSchema = Schema({
 		required: [true, 'email must be provided'],
 	},
 	username: {
-		...requiredString,
+		type: String
 	},
 	password: {
 		type: String,
@@ -60,7 +61,9 @@ const userSchema = Schema({
 	active: {
 		type: Boolean,
 		default: false
-	}
+	},
+	passwordResetToken: String,
+	passwordResetExpires: Date
 }, {
 	timestamps: true,
 	toObject: { virtuals: true },
@@ -78,15 +81,33 @@ userSchema.pre('save', async function(next){
 	this.passwordConfirm = undefined
 	next()
 })
-// QUERY MIDDLEWARE
-userSchema.pre(/^find/, function(next){
-	this.find({ active: true })
+
+userSchema.pre('save', async function(next){
+	if(!this.isModified('password') || this.isNew) return next()
+
+	this.passwordChangedAt = Date.now() - 1000
 	next()
 })
+
+// QUERY MIDDLEWARE
+// userSchema.pre(/^find/, function(next){
+// 	this.find({ active: true })
+// 	next()
+// })
 
 // compare provided password and db password for user authentication
 userSchema.methods.comparePassword = async function(enteredPassword, userPassword) {
 	return await bcrypt.compare(enteredPassword, userPassword)
+}
+
+// password reset token
+userSchema.methods.createPasswordResetToken = function() {
+	const resetToken = crypto.randomBytes(32).toString('hex')
+
+	this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+	console.log(resetToken, this.passwordResetToken);
+	this.passwordResetExpires = Date.now() + (10 * 60 * 1000)
+	return resetToken
 }
 
 const User = mongoose.model('User', userSchema)

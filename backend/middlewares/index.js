@@ -12,8 +12,12 @@ const protect = async (req, res, next) => {
     token = req.cookies.jwt
   }
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+  if(!token){
+    return next('You are not logged in. Please log in to continue')
+  }
 
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+  // check if user still exists
   const user = await User.findById(decoded.id)
 
   if(!user) return next(res.status(401).json({ status: 'fail', message: 'The user belonging this token no longer exist'}))
@@ -26,7 +30,7 @@ const protect = async (req, res, next) => {
 const grantAccessTo = (...roles) => {
   return (req, res, next) => {
     if(!roles.includes(req.user.role)){
-      return next(res.status(403).json({message: 'this user is not authorized to do this'}))
+      return next(res.status(403).json({message: 'this user is not authorized to perform thhis action'}))
     }
     next()
   }
