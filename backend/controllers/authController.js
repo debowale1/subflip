@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
+import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
@@ -97,19 +98,32 @@ const authController = {
 	},
 
 	resetPassword: async (req, res, next) => {
-		const { email } = req.body
+		// Get user based on the token
+
 		try {
-			// check if email is registered
-			const user = await User.findOne({email})
+			const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+	
+			const user = await User.findOne({ 
+				passwordResetToken: hashedToken, 
+				passwordTokenExpires: { $gt: Date.now() }
+			})
+	
+			if(!user){
+				return next(res.status(400).json({ message: 'token is invalid or expired' }))
+			}
+	
+			user.password = req.body.password
+			user.passwordConfirm = req.body.passwordConfirm
+			user.passwordResetToken = undefined
+			user.passwordResetExpires = undefined
+			await user.save()
 
-			if(!user) return next(res.status(404).json({ status: 'fail', message: `User with the email does not exist. Please sign up /api/v1/auth/signup`}))
 
-			// @TODO
-			// sendResetPasswordEmail(email)
-
+			// sign token 
+			const token = signToken(user._id) 
 			res.status(200).json({
 				status: 'success',
-				message: 'We have sent a link to your email. Follow the link to reset your password'
+				token,
 			})
 		} catch (error) {
 			next(res.status(500).json(error))

@@ -8,6 +8,6 @@ router.post('/register', authController.register)
 router.post('/login', authController.login)
 // Password reset routes
 router.post('/forgotPassword', authController.forgotPassword)
-router.patch('/resetPassword', authController.resetPassword)
+router.patch('/resetPassword/:token', authController.resetPassword)
 
 export default router
