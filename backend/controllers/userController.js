@@ -44,6 +44,20 @@ const userController = {
 			return next(error)
 		}
 	},
+	updateMe: async (req, res, next) => {
+		// throw an error if user tries to update their password
+		if(req.body.password || req.body.passwordConfirm){
+			return next(res.status(400).json({message: 'You can\'t update password using this route. Please use /updatePassword'}))
+		}
+
+		// update their details
+		// const updatedUser = await User.findByIdAndUpdate(req.body)
+
+		res.status(200).json({
+			status: 'success'
+		})
+
+	}
 }
 
 export default userController
