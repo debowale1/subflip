@@ -9,6 +9,6 @@ router.patch('/updateMe', protect, userController.updateMe)
 router.post('/create', protect, grantAccessTo('admin'), userController.createUser)
 
 
-router.route('/').get(userController.getAllUser)
+router.route('/').get(protect, userController.getAllUser)
 
 export default router

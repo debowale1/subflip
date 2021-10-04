@@ -1,29 +1,27 @@
 /* eslint-disable import/extensions */
-import { promisify } from 'util'
+// import { promisify } from 'util'
 import jwt from "jsonwebtoken"
 import User from '../models/userModel.js'
 
 const protect = async (req, res, next) => {
   let token;
+
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-    // eslint-disable-next-line prefer-destructuring
-    token = req.headers.authorization.split(' ')[1]
+    token = req.headers.authorization.split(' ')[1];
   }else if(req.cookies.jwt){
-    token = req.cookies.jwt
+    token = req.cookies.jwt;
   }
 
-  if(!token){
-    return next('You are not logged in. Please log in to continue')
-  }
+  // decode the token
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // get user belonging to that token
+  const user = await User.findById(decoded.id);
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
-  // check if user still exists
-  const user = await User.findById(decoded.id)
+  if(!user) return next(res.status(401).json({ status: 'error', message: 'user belonging to this token no longer exist'}))
 
-  if(!user) return next(res.status(401).json({ status: 'fail', message: 'The user belonging this token no longer exist'}))
-
-  // everything good
+  // everything OK
   req.user = user
+  next();
 
 }
 

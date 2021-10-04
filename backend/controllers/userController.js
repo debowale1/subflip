@@ -1,6 +1,15 @@
-/* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
 import User from '../models/userModel.js'
+
+const filterObj = (reqBody, ...allowedFields) => {
+	const updateFields = {}
+	for(const key in reqBody){
+		if(allowedFields.includes(key)){
+			updateFields[key] = reqBody[key]
+		}
+	}
+	return updateFields
+}
 
 const userController = {
 	getAllUser: async (_, res, next) => {
@@ -49,12 +58,21 @@ const userController = {
 		if(req.body.password || req.body.passwordConfirm){
 			return next(res.status(400).json({message: 'You can\'t update password using this route. Please use /updatePassword'}))
 		}
+		
+		const filteredBody = filterObj(req.body, 'firstname', 'lastname', 'email', 'username', 'phoneNumber', 'facebookUrl', 'twitterUrl')
+
 
 		// update their details
-		// const updatedUser = await User.findByIdAndUpdate(req.body)
+		const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
+			new: true,
+			runValidators: true
+		})
 
 		res.status(200).json({
-			status: 'success'
+			status: 'success',
+			data: {
+				user: updatedUser
+			}
 		})
 
 	}
