@@ -51,14 +51,12 @@ const authController = {
       }
       // sign token 
 			const token = signToken(user._id) 
-      // const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
-      //   expiresIn: '90d'
-      // })
+			
 			res.status(200).json({
 				status: 'success',
+				token,
 				data: {
 					user,
-          token
 				},
 			})
 	}),

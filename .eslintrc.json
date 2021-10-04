@@ -31,8 +31,10 @@
               "endOfLine": "auto"
             }
           ],
-          "no-underscore-dangle":"warn",
+          "no-underscore-dangle":"off",
           "consistent-return":"off",
-          "no-return-await":"off"
+          "no-return-await":"off",
+          "prefer-destructuring":"off",
+          "no-restricted-syntax":"off"
     }
 }
