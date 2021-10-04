@@ -51,7 +51,7 @@ const authController = {
       }
       // sign token 
 			const token = signToken(user._id) 
-			
+
 			res.status(200).json({
 				status: 'success',
 				token,
@@ -60,6 +60,32 @@ const authController = {
 				},
 			})
 	}),
+	updatePassword: async(req, res, next) => {
+		const {passwordCurrent, password, passwordConfirm} = req.body
+		try {
+			const user = await User.findById(req.user.id).select('+password')
+			if(!user || !(await user.comparePassword(passwordCurrent, user.password))){
+				return next(res.status(403).json({ status: 'error', message: "the password provided is incorrect" }));
+			}
+			user.password = password
+			user.passwordConfirm = passwordConfirm
+			await user.save();
+
+
+
+			const token = signToken(user._id) 
+
+			res.status(200).json({
+				status: 'success',
+				token,
+				data: {
+					user,
+				},
+			})
+		} catch (error) {
+			return next(error)
+		}
+	},
 
 	forgotPassword: async (req, res, next) => {
 		const { email } = req.body
