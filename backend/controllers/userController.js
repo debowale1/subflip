@@ -75,7 +75,23 @@ const userController = {
 			}
 		})
 
+	},
+	deleteMe: async (req, res, next) => {
+		
+		try {
+			await User.findByIdAndUpdate(req.user.id, { active: false })	
+			res.status(204).json({
+				status: 'success',
+				data: {
+					user: null
+				}
+			})
+		} catch (error) {
+			return next(error)
+		}
 	}
+		// throw an error if user tries to update their password
+		
 }
 
 export default userController

@@ -60,7 +60,8 @@ const userSchema = Schema({
 	},
 	active: {
 		type: Boolean,
-		default: false
+		default: true,
+		select: false
 	},
 	passwordResetToken: String,
 	passwordResetExpires: Date
@@ -90,10 +91,10 @@ userSchema.pre('save', async function(next){
 })
 
 // QUERY MIDDLEWARE
-// userSchema.pre(/^find/, function(next){
-// 	this.find({ active: true })
-// 	next()
-// })
+userSchema.pre(/^find/, function(next){
+	this.find({ active: true })
+	next()
+})
 
 // compare provided password and db password for user authentication
 userSchema.methods.comparePassword = async function(enteredPassword, userPassword) {
