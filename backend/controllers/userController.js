@@ -27,6 +27,9 @@ const userController = {
 			return next(error)
 		}
 	},
+	getUserById: async(req, res, next) => {
+
+	},
 	// eslint-disable-next-line consistent-return
 	createUser: async (req, res, next) => {
 		const { firstname, lastname, email, password, passwordConfirm } = req.body

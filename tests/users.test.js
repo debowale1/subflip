@@ -26,5 +26,12 @@ describe('Users Endpoints /api/v1/users', () => {
     expect(201)
   })
 
+  it('should get a user by id', async () => {
+    const ID = '6154c01de6068a81edd410ee'
+    const res = await api.post(`/users/${ID}`)
+    expect(res.body.data).to.be.an('object')
+    expect(200)
+  })
+
 })
 
