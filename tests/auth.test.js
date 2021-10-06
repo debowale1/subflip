@@ -24,4 +24,20 @@ describe('Authentication /auth', () => {
     })
     expect(200)
   })
+
+  it('user should be able to send forgot password request', async () => {
+    await api.post('/auth/forgotPassword').send({
+      email: faker.internet.email(),
+    })
+    expect(200)
+  })
+
+  it('user should be able to send password reset request', async () => {
+    const token = '9897fc1fe876a78ac1bfd9b4e0904896e125453cb006655fb7038bb19c70a8f6'
+    await api.patch(`/auth/resetPassword/${token}`).send({
+      password: 'password',
+      passwordConfirm: 'password',
+    })
+    expect(200)
+  })
 })

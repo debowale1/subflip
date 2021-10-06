@@ -8,11 +8,12 @@ const api = request('http://localhost:9000/api/v1')
 
 describe('Users Endpoints /api/v1/users', () => {
   // test spec (unit test)
-	// it('should return all users', async (done) => {
-	// 	const users = await api.get('/users/')
-	// 	expect(users).to.be.greaterThan(0)
+	// it('should return all users', async () => {
+	// 	const res = await api.get('/users')
+  //   console.log(res);
+	// 	// expect(res).to.be.greaterThan(0)
 	// 	// expect(res.body.data).to.be.an('Object')
-  //   done()
+  //   // done()
 	// })
 
 	it('should create a new user', async () => {
@@ -28,9 +29,10 @@ describe('Users Endpoints /api/v1/users', () => {
 
   it('should get a user by id', async () => {
     const ID = '6154c01de6068a81edd410ee'
-    const res = await api.post(`/users/${ID}`)
+    const res = await api.get(`/users/${ID}`)
     expect(res.body.data).to.be.an('object')
-    expect(200)
+    expect(res.body.status).to.be.a('string')
+    expect(res.statusCode).to.be.equal(200)
   })
 
 })

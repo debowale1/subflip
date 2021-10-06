@@ -99,7 +99,7 @@ const authController = {
 			// save user's reset token
 			await user.save({ validateBeforeSave: false }) 
 
-			const resetURL = `${req.protocol}://${req.get('host')}/api/v1/resetPassword/${resetToken}`
+			const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/resetPassword/${resetToken}`
 			const message = `Forgot your password? please create a new one using this link ${resetURL}. \n If you didn't forget your password, please ignore this message.`
 
 			await sendEmail({

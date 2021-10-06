@@ -28,7 +28,20 @@ const userController = {
 		}
 	},
 	getUserById: async(req, res, next) => {
+		const {id} = req.params
+		try {
+				const user = await User.findById(id)
+				if(!user) return next(res.status(404).json({ message: 'User not found'}))
 
+				res.status(200).json({
+					status: 'success',
+					data: {
+						user
+					}
+				})
+		} catch (error) {
+			return next(error)
+		}
 	},
 	// eslint-disable-next-line consistent-return
 	createUser: async (req, res, next) => {
