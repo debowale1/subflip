@@ -16,12 +16,36 @@ const userController = {
 	getAllUser: async (req, res, next) => {
 		const queryObj = { ...req.query }
 		
-		const allowedFields = ['sort','limit', 'fields', 'page', 'active', 'role']
+		const allowedFields = ['sort','limit', 'fields', 'page']
 		allowedFields.forEach(el => delete queryObj[el]);
 		
-		// const queryStr = 
 		try {
-			const users = await User.find(queryObj)
+
+			let query = User.find(queryObj)
+
+			if(req.query.sort){
+				const sortBy = req.query.sort.split(',').join(' ')
+				query = query.sort(sortBy)
+			}else{
+				query = query.sort('-createdAt')
+			}
+
+			// fields selection
+			if(req.query.fields){
+				const fields = req.query.fields.split(',').join(' ')
+				query = query.select(fields)
+			}else{
+				query = query.select('-__v')
+			}
+
+			// pagination
+			const perPage = +req.query.limit || 15
+			const page = +req.query.page || 1
+			const skip = (page - 1) * perPage
+			query = query.skip(skip).limit(perPage)
+
+
+			const users = await query
 
 			res.status(200).json({
 				status: 'success',
