@@ -11,16 +11,23 @@ const filterObj = (reqBody, ...allowedFields) => {
 	return updateFields
 }
 
+
 const userController = {
-	getAllUser: async (_, res, next) => {
+	getAllUser: async (req, res, next) => {
+		const queryObj = { ...req.query }
+		
+		const allowedFields = ['sort','limit', 'fields', 'page', 'active', 'role']
+		allowedFields.forEach(el => delete queryObj[el]);
+		
+		// const queryStr = 
 		try {
-			const users = await User.find().sort({ createdAt: -1})
+			const users = await User.find(queryObj)
 
 			res.status(200).json({
 				status: 'success',
 				result: users.length,
 				data: {
-					users,
+					users
 				},
 			})
 		} catch (error) {
@@ -37,6 +44,20 @@ const userController = {
 					status: 'success',
 					data: {
 						user
+					}
+				})
+		} catch (error) {
+			return next(error)
+		}
+	},
+	deleteUserById: async(req, res, next) => {
+		const {id} = req.params
+		try {
+				await User.findByIdAndDelete(id)
+				res.status(204).json({
+					status: 'success',
+					data: {
+						user: null
 					}
 				})
 		} catch (error) {
