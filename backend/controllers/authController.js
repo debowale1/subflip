@@ -51,7 +51,7 @@ const authController = {
       }
       // sign token 
 			const token = signToken(user._id) 
-			
+
 			res.status(200).json({
 				status: 'success',
 				token,
@@ -60,6 +60,32 @@ const authController = {
 				},
 			})
 	}),
+	updatePassword: async(req, res, next) => {
+		const {passwordCurrent, password, passwordConfirm} = req.body
+		try {
+			const user = await User.findById(req.user.id).select('+password')
+			if(!user || !(await user.comparePassword(passwordCurrent, user.password))){
+				return next(res.status(403).json({ status: 'error', message: "the password provided is incorrect" }));
+			}
+			user.password = password
+			user.passwordConfirm = passwordConfirm
+			await user.save();
+
+
+
+			const token = signToken(user._id) 
+
+			res.status(200).json({
+				status: 'success',
+				token,
+				data: {
+					user,
+				},
+			})
+		} catch (error) {
+			return next(error)
+		}
+	},
 
 	forgotPassword: async (req, res, next) => {
 		const { email } = req.body
@@ -73,7 +99,7 @@ const authController = {
 			// save user's reset token
 			await user.save({ validateBeforeSave: false }) 
 
-			const resetURL = `${req.protocol}://${req.get('host')}/api/v1/resetPassword/${resetToken}`
+			const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/resetPassword/${resetToken}`
 			const message = `Forgot your password? please create a new one using this link ${resetURL}. \n If you didn't forget your password, please ignore this message.`
 
 			await sendEmail({

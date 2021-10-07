@@ -10,6 +10,11 @@ router.delete('/deleteMe', protect, userController.deleteMe)
 router.post('/create', protect, grantAccessTo('admin'), userController.createUser)
 
 
-router.route('/').get(protect, userController.getAllUser)
+router.route('/')
+      .get(protect, userController.getAllUser)
+      
+router.route('/:id')
+      .get(userController.getUserById)
+      .delete(userController.deleteUserById)
 
 export default router

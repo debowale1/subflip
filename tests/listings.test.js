@@ -5,7 +5,7 @@ import request from 'supertest'
 
 const api = request('http://localhost:9000/api/v1')
 
-describe('Lisiting /api/v1/listings', () => {
+describe('Listing Endpoints /api/v1/listings', () => {
   it('should return all listings', async () => {
     const res = await api.get('/listings')
     // eslint-disable-next-line no-unused-expressions
