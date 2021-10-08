@@ -17,6 +17,21 @@ const listingController = {
       return next(error)
     }
   },
+  getListingById: async (req, res, next) => {
+    const {id} = req.params
+    try {
+      const listing = await Listing.findById(id)
+      res.status(200).json({
+        status: 'success',
+        data: {
+          listing
+        }
+      })
+    } catch (error) {
+      // res.status(500).json(error)
+      return next(error)
+    }
+  },
   getAll: async (_, res,  next) => {
     try {
       const listings = await Listing.find().sort({ createdAt: -1}).limit(5)
