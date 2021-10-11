@@ -20,6 +20,9 @@ if (process.env.NODE_ENV === 'development') {
 
 // body parser
 app.use(express.json({ limit: '10kb' }))
+
+// Do data sanitization
+
 // rate limiting
 const limiter = rateLimit({
 	max: 100,
