@@ -12,6 +12,29 @@ const signToken = (id) => {
 	})
 }
 
+const createAndSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id) 
+
+	const cookieOptions = {
+		expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 *1000),
+		httpOnly: true
+	}
+	// for production
+	if(process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+	res.cookie('jwt', token, cookieOptions)
+	// remove password from output
+	user.password = undefined
+	
+	res.status(statusCode).json({
+		status: 'success',
+		token,
+		data: {
+			user,
+		},
+	})
+}
+
 const authController = {
 	register: asyncHandler(async (req, res, next) => {
 		const { firstname, lastname, email, username, password, passwordConfirm } = req.body
@@ -30,16 +53,17 @@ const authController = {
 			})
 
       // generate a token for the user
-      const token = signToken(newUser._id) 
+      // const token = signToken(newUser._id) 
 			
 
-			res.status(200).json({
-				status: 'success',
-				token,
-				data: {
-					newUser,
-				},
-			})
+			// res.status(200).json({
+			// 	status: 'success',
+			// 	token,
+			// 	data: {
+			// 		newUser,
+			// 	},
+			// })
+			createAndSendToken(newUser, 200, res)
 	}),
 	// eslint-disable-next-line consistent-return
 	login: asyncHandler(async (req, res, next) => {
@@ -50,15 +74,16 @@ const authController = {
         return next(res.status(401).json({ status: 'fail', message: 'username or password is incorrect. Please try again'}))
       }
       // sign token 
-			const token = signToken(user._id) 
+			// const token = signToken(user._id) 
 
-			res.status(200).json({
-				status: 'success',
-				token,
-				data: {
-					user,
-				},
-			})
+			// res.status(200).json({
+			// 	status: 'success',
+			// 	token,
+			// 	data: {
+			// 		user,
+			// 	},
+			// })
+			createAndSendToken(user, 200, res)
 	}),
 	updatePassword: async(req, res, next) => {
 		const {passwordCurrent, password, passwordConfirm} = req.body
@@ -73,15 +98,16 @@ const authController = {
 
 
 
-			const token = signToken(user._id) 
+			// const token = signToken(user._id) 
 
-			res.status(200).json({
-				status: 'success',
-				token,
-				data: {
-					user,
-				},
-			})
+			// res.status(200).json({
+			// 	status: 'success',
+			// 	token,
+			// 	data: {
+			// 		user,
+			// 	},
+			// })
+			createAndSendToken(user, 200, res)
 		} catch (error) {
 			return next(error)
 		}
@@ -149,6 +175,7 @@ const authController = {
 				status: 'success',
 				token,
 			})
+			// createAndSendToken(user, 200, res)
 		} catch (error) {
 			next(res.status(500).json(error))
 		}
