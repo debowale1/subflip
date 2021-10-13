@@ -27,7 +27,7 @@ const userController = {
 				const sortBy = req.query.sort.split(',').join(' ')
 				query = query.sort(sortBy)
 			}else{
-				query = query.sort('-createdAt')
+				query = query.sort('createdAt')
 			}
 
 			// fields selection

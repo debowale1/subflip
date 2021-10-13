@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
+import xss from 'xss-clean'
+import hpp from 'hpp'
 import userRouter from './routes/userRoutes.js'
 import authRouter from './routes/authRoutes.js'
 import listingRouter from './routes/listingRoutes.js'
@@ -18,10 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'))
 }
 
-// body parser
-app.use(express.json({ limit: '10kb' }))
 
-// Do data sanitization
 
 // rate limiting
 const limiter = rateLimit({
@@ -30,6 +30,18 @@ const limiter = rateLimit({
 	message: 'Too many requests from this IP. Please try again in an hour'
 })
 app.use('/api', limiter)
+
+// body parser
+app.use(express.json({ limit: '10kb' }))
+
+// Do data sanitization
+app.use(mongoSanitize())
+
+// data sanitization against xss
+app.use(xss())
+// prevent paramater pollution
+app.use(hpp())
+
 // serving static files
 app.use(express.static(`{__dirname}/public`))
 
@@ -45,7 +57,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/listings', listingRouter)
 
 // Unknown route
-app.get('*', async (req, res) => {
+app.get('*', async (_, res) => {
 	console.log('Not Found')
 	res.redirect('/')
 })
