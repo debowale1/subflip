@@ -21,6 +21,13 @@ const listingController = {
     const {id} = req.params
     try {
       const listing = await Listing.findById(id)
+      
+      // for populating fields
+      // const listing = await Listing.findById(id).populate({
+      //   path: 'user', 
+      //   select: 'firstname lastname'
+      // })
+
       res.status(200).json({
         status: 'success',
         data: {
