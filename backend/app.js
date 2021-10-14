@@ -10,6 +10,7 @@ import hpp from 'hpp'
 import userRouter from './routes/userRoutes.js'
 import authRouter from './routes/authRoutes.js'
 import listingRouter from './routes/listingRoutes.js'
+import commentRouter from './routes/commentRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -55,6 +56,7 @@ app.get('/api/v1/ping', (req, res) => {
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/listings', listingRouter)
+app.use('/api/v1/comments', commentRouter)
 
 // Unknown route
 app.get('*', async (_, res) => {

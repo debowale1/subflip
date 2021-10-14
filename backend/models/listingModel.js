@@ -49,6 +49,13 @@ listingSchema.pre(/^find/, function(next){
   next()
 })
 
+// virtual populate
+listingSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'listing',
+  localField: '_id'
+})
+
 const Lisitng = mongoose.model('Listing', listingSchema)
 
 export default Lisitng
