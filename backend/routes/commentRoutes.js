@@ -6,7 +6,7 @@ import { protect, grantAccessTo } from '../middlewares/index.js'
 const router = express.Router()
 
 router.route('/')
-      .post(protect, grantAccessTo('user'), commentController.create)
+      .post(protect, grantAccessTo('user'), commentController.createComment)
       .get(commentController.getAllComments)
 
 export default router

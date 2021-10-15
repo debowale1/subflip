@@ -3,14 +3,14 @@ import Comment from '../models/commentModel.js'
 
 
 const commentController = {
-  create: async (req, res, next) => {
-    const { desc, listing } = req.body
+  createComment: async (req, res, next) => {
+
+    
+    if(!req.body.listing) req.body.listing = req.params.listingId
+    if(!req.body.user) req.body.user = req.user.id
+    
     try {
-      const comment = await Comment.create({
-        desc,
-        user: req.user.id,
-        listing
-      })
+      const comment = await Comment.create(req.body)
       res.status(201).json({
         status: 'success',
         data: {
