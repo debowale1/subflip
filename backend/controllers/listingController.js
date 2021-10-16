@@ -41,7 +41,8 @@ const listingController = {
   },
   getAll: async (_, res,  next) => {
     try {
-      const listings = await Listing.find().sort({ createdAt: -1}).limit(5)
+      // const listings = await Listing.find().sort({ createdAt: -1}).limit(5)
+      const listings = await Listing.find()
       
       res.status(200).json({
         status: 'success',

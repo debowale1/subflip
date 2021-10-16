@@ -22,8 +22,10 @@ const commentController = {
     }
   },
   getAllComments: async (req, res, next) => {
+    let filter = {}
     try {
-      const comments = await Comment.find().populate('user')
+      if(req.params.listingId) filter = {listing: req.params.listingId}
+      const comments = await Comment.find(filter).populate('user')
       res.status(200).json({
         status: 'success',
         results: comments.length,

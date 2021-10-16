@@ -3,10 +3,12 @@ import express from 'express'
 import commentController from '../controllers/commentController.js'
 import { protect, grantAccessTo } from '../middlewares/index.js'
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
+// POST /:listingId/2fy638tt6/comments
+// GET /:listingId/2fy638tt6/comments
 
 router.route('/')
-      .post(protect, grantAccessTo('user'), commentController.createComment)
       .get(commentController.getAllComments)
+      .post(protect, grantAccessTo('user'), commentController.createComment)
 
 export default router
