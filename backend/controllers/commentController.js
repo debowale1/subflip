@@ -1,16 +1,17 @@
 /* eslint-disable import/extensions */
 import Comment from '../models/commentModel.js'
+import factory from './factory.js'
 
 
 const commentController = {
-  create: async (req, res, next) => {
-    const { desc, listing } = req.body
+  createComment: async (req, res, next) => {
+
+    
+    if(!req.body.listing) req.body.listing = req.params.listingId
+    if(!req.body.user) req.body.user = req.user.id
+    
     try {
-      const comment = await Comment.create({
-        desc,
-        user: req.user.id,
-        listing
-      })
+      const comment = await Comment.create(req.body)
       res.status(201).json({
         status: 'success',
         data: {
@@ -22,8 +23,10 @@ const commentController = {
     }
   },
   getAllComments: async (req, res, next) => {
+    let filter = {}
     try {
-      const comments = await Comment.find().populate('user')
+      if(req.params.listingId) filter = {listing: req.params.listingId}
+      const comments = await Comment.find(filter).populate('user')
       res.status(200).json({
         status: 'success',
         results: comments.length,
@@ -34,7 +37,10 @@ const commentController = {
     } catch (error) {
       return next(error)
     }
-  }
+  },
+  getCommentById: factory.getOne(Comment),
+  updateComment: factory.updateOne(Comment),
+  deleteCommentById: factory.deleteOne(Comment),
 }
 
 export default commentController

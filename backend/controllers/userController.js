@@ -1,5 +1,6 @@
 /* eslint-disable import/extensions */
 import User from '../models/userModel.js'
+import factory from './factory.js'
 
 const filterObj = (reqBody, ...allowedFields) => {
 	const updateFields = {}
@@ -58,36 +59,8 @@ const userController = {
 			return next(error)
 		}
 	},
-	getUserById: async(req, res, next) => {
-		const {id} = req.params
-		try {
-				const user = await User.findById(id)
-				if(!user) return next(res.status(404).json({ message: 'User not found'}))
-
-				res.status(200).json({
-					status: 'success',
-					data: {
-						user
-					}
-				})
-		} catch (error) {
-			return next(error)
-		}
-	},
-	deleteUserById: async(req, res, next) => {
-		const {id} = req.params
-		try {
-				await User.findByIdAndDelete(id)
-				res.status(204).json({
-					status: 'success',
-					data: {
-						user: null
-					}
-				})
-		} catch (error) {
-			return next(error)
-		}
-	},
+	getUserById: factory.getOne(User),
+	deleteUserById: factory.deleteOne(User),
 	// eslint-disable-next-line consistent-return
 	createUser: async (req, res, next) => {
 		const { firstname, lastname, email, password, passwordConfirm } = req.body
@@ -114,6 +87,7 @@ const userController = {
 			return next(error)
 		}
 	},
+	updateUser: factory.updateOne(User),
 	updateMe: async (req, res, next) => {
 		// throw an error if user tries to update their password
 		if(req.body.password || req.body.passwordConfirm){

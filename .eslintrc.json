@@ -35,6 +35,7 @@
           "consistent-return":"off",
           "no-return-await":"off",
           "prefer-destructuring":"off",
-          "no-restricted-syntax":"off"
+          "no-restricted-syntax":"off",
+          "no-plusplus":"warn"
     }
 }
