@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
 import Listing from '../models/listingModel.js'
+import factory from './factory.js'
 
 const listingController = {
   create: async (req, res, next) => {
@@ -54,7 +55,9 @@ const listingController = {
       next(res.status(500).json(error))
     }
 
-  }
+  },
+  updateListing: factory.updateOne(Listing),
+  deleteListingById: factory.deleteOne(Listing)
 }
 
 export default listingController

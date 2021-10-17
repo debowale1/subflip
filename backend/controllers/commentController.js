@@ -1,5 +1,6 @@
 /* eslint-disable import/extensions */
 import Comment from '../models/commentModel.js'
+import factory from './factory.js'
 
 
 const commentController = {
@@ -36,7 +37,10 @@ const commentController = {
     } catch (error) {
       return next(error)
     }
-  }
+  },
+  getCommentById: factory.getOne(Comment),
+  updateComment: factory.updateOne(Comment),
+  deleteCommentById: factory.deleteOne(Comment),
 }
 
 export default commentController

@@ -11,7 +11,11 @@ const router = Router()
 router.use('/:listingId/comments', commentRouter)
 
 router.route('/').get(listingController.getAll).post(listingController.create)
-router.route('/:id').get(listingController.getListingById)
+
+router.route('/:id')
+      .get(listingController.getListingById)
+      .patch(listingController.updateListing)
+      .delete(listingController.deleteListingById)
 
 
 
