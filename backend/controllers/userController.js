@@ -14,53 +14,10 @@ const filterObj = (reqBody, ...allowedFields) => {
 
 
 const userController = {
-	getAllUser: async (req, res, next) => {
-		const queryObj = { ...req.query }
-		
-		const allowedFields = ['sort','limit', 'fields', 'page']
-		allowedFields.forEach(el => delete queryObj[el]);
-		
-		try {
-
-			let query = User.find(queryObj)
-
-			if(req.query.sort){
-				const sortBy = req.query.sort.split(',').join(' ')
-				query = query.sort(sortBy)
-			}else{
-				query = query.sort('createdAt')
-			}
-
-			// fields selection
-			if(req.query.fields){
-				const fields = req.query.fields.split(',').join(' ')
-				query = query.select(fields)
-			}else{
-				query = query.select('-__v')
-			}
-
-			// pagination
-			const perPage = +req.query.limit || 15
-			const page = +req.query.page || 1
-			const skip = (page - 1) * perPage
-			query = query.skip(skip).limit(perPage)
-
-
-			const users = await query
-
-			res.status(200).json({
-				status: 'success',
-				result: users.length,
-				data: {
-					users
-				},
-			})
-		} catch (error) {
-			return next(error)
-		}
-	},
+	getAllUser: factory.getAll(User),
 	getUserById: factory.getOne(User),
 	deleteUserById: factory.deleteOne(User),
+	updateUser: factory.updateOne(User),
 	// eslint-disable-next-line consistent-return
 	createUser: async (req, res, next) => {
 		const { firstname, lastname, email, password, passwordConfirm } = req.body
@@ -87,7 +44,7 @@ const userController = {
 			return next(error)
 		}
 	},
-	updateUser: factory.updateOne(User),
+	
 	updateMe: async (req, res, next) => {
 		// throw an error if user tries to update their password
 		if(req.body.password || req.body.passwordConfirm){

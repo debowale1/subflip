@@ -53,16 +53,6 @@ const authController = {
 			})
 
       // generate a token for the user
-      // const token = signToken(newUser._id) 
-			
-
-			// res.status(200).json({
-			// 	status: 'success',
-			// 	token,
-			// 	data: {
-			// 		newUser,
-			// 	},
-			// })
 			createAndSendToken(newUser, 200, res)
 	}),
 	// eslint-disable-next-line consistent-return
@@ -74,15 +64,6 @@ const authController = {
         return next(res.status(401).json({ status: 'fail', message: 'username or password is incorrect. Please try again'}))
       }
       // sign token 
-			// const token = signToken(user._id) 
-
-			// res.status(200).json({
-			// 	status: 'success',
-			// 	token,
-			// 	data: {
-			// 		user,
-			// 	},
-			// })
 			createAndSendToken(user, 200, res)
 	}),
 	updatePassword: async(req, res, next) => {
@@ -95,18 +76,7 @@ const authController = {
 			user.password = password
 			user.passwordConfirm = passwordConfirm
 			await user.save();
-
-
-
-			// const token = signToken(user._id) 
-
-			// res.status(200).json({
-			// 	status: 'success',
-			// 	token,
-			// 	data: {
-			// 		user,
-			// 	},
-			// })
+			// create and send token
 			createAndSendToken(user, 200, res)
 		} catch (error) {
 			return next(error)

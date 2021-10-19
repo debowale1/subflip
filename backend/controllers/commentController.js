@@ -4,24 +4,13 @@ import factory from './factory.js'
 
 
 const commentController = {
-  createComment: async (req, res, next) => {
-
-    
+  setUserAndListingIds: (req, res, next) => {
+    // set user and listing id to create new comment on listing
     if(!req.body.listing) req.body.listing = req.params.listingId
     if(!req.body.user) req.body.user = req.user.id
-    
-    try {
-      const comment = await Comment.create(req.body)
-      res.status(201).json({
-        status: 'success',
-        data: {
-          comment
-        }
-      })
-    } catch (error) {
-      return next(error)
-    }
+    next()
   },
+
   getAllComments: async (req, res, next) => {
     let filter = {}
     try {
@@ -38,6 +27,7 @@ const commentController = {
       return next(error)
     }
   },
+  createComment: factory.createOne(Comment),
   getCommentById: factory.getOne(Comment),
   updateComment: factory.updateOne(Comment),
   deleteCommentById: factory.deleteOne(Comment),

@@ -7,10 +7,16 @@ const router = express.Router({ mergeParams: true })
 
 router.route('/')
       .get(commentController.getAllComments)
-      .post(protect, grantAccessTo('user'), commentController.createComment)
+      .post(
+            protect, 
+            grantAccessTo('user'), 
+            commentController.setUserAndListingIds, 
+            commentController.createComment
+            )
 
 router.route('/:id')
+      .get(commentController.getCommentById)   
+      .patch(commentController.updateComment)   
       .delete(commentController.deleteCommentById)
-      // .get(commentController.createComment)
 
 export default router
