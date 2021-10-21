@@ -81,7 +81,11 @@ const userController = {
 		} catch (error) {
 			return next(error)
 		}
-	}
+	},
+	myDetails: async (req, res, next) => {
+		req.params.id = req.user.id
+		next()
+	} 
 		// throw an error if user tries to update their password
 		
 }

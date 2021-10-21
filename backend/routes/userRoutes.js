@@ -8,6 +8,7 @@ const router = express.Router()
 router.patch('/updateMe', protect, userController.updateMe)
 router.delete('/deleteMe', protect, userController.deleteMe)
 router.post('/create', protect, grantAccessTo('admin'), userController.createUser)
+router.get('/myDetails', protect, userController.myDetails, userController.getUserById)
 
 
 router.route('/')
