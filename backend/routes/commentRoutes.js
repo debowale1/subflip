@@ -5,11 +5,12 @@ import { protect, grantAccessTo } from '../middlewares/index.js'
 
 const router = express.Router({ mergeParams: true })
 
+router.use(protect)
+
 router.route('/')
       .get(commentController.getAllComments)
       .post(
-            protect, 
-            grantAccessTo('user'), 
+            grantAccessTo('user', 'moderator', 'admin'), 
             commentController.setUserAndListingIds, 
             commentController.createComment
             )
