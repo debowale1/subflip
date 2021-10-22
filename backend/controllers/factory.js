@@ -100,7 +100,7 @@ const factory = {
 			query = query.skip(skip).limit(perPage)
 
 
-			const docs = await query
+			const docs = await query.explain()
 
 			res.status(200).json({
 				status: 'success',
