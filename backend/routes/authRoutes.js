@@ -10,6 +10,7 @@ router.post('/login', authController.login)
 // Password reset routes
 router.post('/forgotPassword', authController.forgotPassword)
 router.patch('/resetPassword/:token', authController.resetPassword)
+
 router.patch('/updateMyPassword/',protect, authController.updatePassword)
 
 export default router

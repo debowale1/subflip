@@ -7,11 +7,15 @@ const router = express.Router()
 
 router.patch('/updateMe', protect, userController.updateMe)
 router.delete('/deleteMe', protect, userController.deleteMe)
-router.post('/create', protect, grantAccessTo('admin'), userController.createUser)
+router.get('/myDetails', protect, userController.myDetails, userController.getUserById)
+// router.post('/create', )
 
+router.use(protect)
+router.use(grantAccessTo('admin'))
 
 router.route('/')
-      .get(protect, userController.getAllUser)
+      .get(userController.getAllUser)
+      .post(userController.createUser)
       
 router.route('/:id')
       .get(userController.getUserById)

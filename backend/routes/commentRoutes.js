@@ -5,12 +5,19 @@ import { protect, grantAccessTo } from '../middlewares/index.js'
 
 const router = express.Router({ mergeParams: true })
 
+router.use(protect)
+
 router.route('/')
       .get(commentController.getAllComments)
-      .post(protect, grantAccessTo('user'), commentController.createComment)
+      .post(
+            grantAccessTo('user', 'moderator', 'admin'), 
+            commentController.setUserAndListingIds, 
+            commentController.createComment
+            )
 
 router.route('/:id')
+      .get(commentController.getCommentById)   
+      .patch(commentController.updateComment)   
       .delete(commentController.deleteCommentById)
-      // .get(commentController.createComment)
 
 export default router

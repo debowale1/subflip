@@ -36,6 +36,7 @@
           "no-return-await":"off",
           "prefer-destructuring":"off",
           "no-restricted-syntax":"off",
-          "no-plusplus":"warn"
+          "no-plusplus":"warn",
+          "no-param-reassign":"off"
     }
 }

@@ -34,6 +34,8 @@ const listingSchema = mongoose.Schema({
   toJSON: { virtuals: true },
 })
 
+listingSchema.index({ slug: 1 })
+
 // create slug for each title before save
 listingSchema.pre('save', function(next){
   this.slug = slugify(this.title, { lower: true })
