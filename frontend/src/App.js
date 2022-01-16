@@ -1,6 +1,6 @@
 function App() {
   return (
-    <h1>Welcome to Subflip</h1>
+    <h1 style={{textAlign: 'center'}}>Welcome to Subflip</h1>
   );
 }
 
