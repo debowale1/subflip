@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
@@ -20,13 +21,14 @@ const userSchema = Schema({
 		required: [true, 'email must be provided'],
 	},
 	username: {
-		...requiredString,
+		type: String
 	},
 	password: {
 		type: String,
 		trim: true,
 		required: [true, 'Please provide a password'],
 		min: 8,
+		select: false
 	},
 	passwordConfirm: {
 		type: String,
@@ -41,7 +43,7 @@ const userSchema = Schema({
 	role: {
     type: String,
     enum: {
-      values: ['user', 'admin'],
+      values: ['user', 'moderator', 'admin'],
       message: "role can only be either user, or admin"
     },
     default: 'user'
@@ -56,13 +58,24 @@ const userSchema = Schema({
 	twitterUrl: {
 		type: String,
 	},
+	active: {
+		type: Boolean,
+		default: true,
+		select: false
+	},
+	passwordResetToken: String,
+	passwordResetExpires: Date
 }, {
 	timestamps: true,
 	toObject: { virtuals: true },
 	toJSON: { virtuals: true },
 })
 
-// pre save middleware
+userSchema.virtual('fullname').get(function(){
+	return `${this.firstname} ${this.lastname}`
+})
+
+// DOCUMENT MIDDLEWARE: pre save hook
 userSchema.pre('save', async function(next){
 	if(!this.isModified('password')) return next()
 	this.password = await bcrypt.hash(this.password, 12)
@@ -70,9 +83,30 @@ userSchema.pre('save', async function(next){
 	next()
 })
 
+userSchema.pre('save', async function(next){
+	if(!this.isModified('password') || this.isNew) return next()
+
+	this.passwordChangedAt = Date.now() - 1000
+	next()
+})
+
+// QUERY MIDDLEWARE
+userSchema.pre(/^find/, function(next){
+	this.find({ active: true })
+	next()
+})
+
 // compare provided password and db password for user authentication
 userSchema.methods.comparePassword = async function(enteredPassword, userPassword) {
 	return await bcrypt.compare(enteredPassword, userPassword)
+}
+
+// password reset token
+userSchema.methods.createPasswordResetToken = function() {
+	const resetToken = crypto.randomBytes(32).toString('hex')
+	this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+	this.passwordResetExpires = Date.now() + (10 * 60 * 1000) // 10mins
+	return resetToken
 }
 
 const User = mongoose.model('User', userSchema)

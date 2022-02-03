@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import slugify from 'slugify'
 
 const requiredString = {
   type: String,
@@ -31,6 +32,30 @@ const listingSchema = mongoose.Schema({
   timestamps: true,
   toObject: { virtuals: true },
   toJSON: { virtuals: true },
+})
+
+listingSchema.index({ slug: 1 })
+
+// create slug for each title before save
+listingSchema.pre('save', function(next){
+  this.slug = slugify(this.title, { lower: true })
+  next()
+})
+
+// populate users from id
+listingSchema.pre(/^find/, function(next){
+  this.populate({
+    path: 'user',
+    select: 'firstname lastname'
+  })
+  next()
+})
+
+// virtual populate
+listingSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'listing',
+  localField: '_id'
 })
 
 const Lisitng = mongoose.model('Listing', listingSchema)
