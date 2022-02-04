@@ -12,13 +12,13 @@ describe("Subflip Authentication Test Suit", () => {
     mongoose.connect('mongodb://localhost/subflip', function(error) {
         if (error) console.error('Error while connecting:\n%\n', error);
         console.log('connected');
+        done(error);
       });
-      done(error);
   });
-  after(async function(done){
-    await mongoose.disconnect()
-    done()
-  })
+  // after(async function(done){
+  //   await mongoose.disconnect()
+  //   done()
+  // })
 
     describe('Authentication /auth', () => {
       it('user should be able to register', async () => {

@@ -13,14 +13,14 @@ describe('User Test Suit', () => {
     mongoose.connect('mongodb://localhost/subflip', function(error) {
         if (error) console.error('Error while connecting:\n%\n', error);
         console.log('connected');
+        done(error);
       });
-      done(error);
   });
 
-  after(async function(done){
-    await mongoose.disconnect()
-    done()
-  })
+  // after(async function(done){
+  //   await mongoose.disconnect()
+  //   done()
+  // })
 
 
 

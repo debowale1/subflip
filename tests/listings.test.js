@@ -11,14 +11,14 @@ describe("Subflip Listing Test Suit", () => {
     mongoose.connect('mongodb://localhost/subflip', function(error) {
         if (error) console.error('Error while connecting:\n%\n', error);
         console.log('connected');
+        done(error);
       });
-      done(error);
   });
 
-  after(async function(done){
-    await mongoose.disconnect()
-    done()
-  })
+  // after(async function(done){
+  //   await mongoose.disconnect()
+  //   done()
+  // })
 
   describe('Listing Endpoints /api/v1/listings', () => {
     it('should return all listings', async () => {
