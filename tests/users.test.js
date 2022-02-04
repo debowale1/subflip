@@ -15,7 +15,12 @@ describe('User Test Suit', () => {
         console.log('connected');
       });
       done(error);
-});
+  });
+
+  after(async function(done){
+    await mongoose.disconnect()
+    done()
+  })
 
 
 

@@ -14,7 +14,11 @@ describe("Subflip Authentication Test Suit", () => {
         console.log('connected');
       });
       done(error);
-});
+  });
+  after(async function(done){
+    await mongoose.disconnect()
+    done()
+  })
 
     describe('Authentication /auth', () => {
       it('user should be able to register', async () => {

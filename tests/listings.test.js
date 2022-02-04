@@ -13,7 +13,12 @@ describe("Subflip Listing Test Suit", () => {
         console.log('connected');
       });
       done(error);
-});
+  });
+
+  after(async function(done){
+    await mongoose.disconnect()
+    done()
+  })
 
   describe('Listing Endpoints /api/v1/listings', () => {
     it('should return all listings', async () => {
