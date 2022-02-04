@@ -14,8 +14,8 @@ describe('Listing Endpoints /api/v1/listings', () => {
 		// expect(res.body.data).to.be.an('Object')
   })
 
-  it('should return all listings', async () => {
-    const ID = '68hy789356103877hdy'
+  it('should return a listing by ID', async () => {
+    const ID = '616951c3b8d38d4f774441e2'
     const res = await api.get(`/listings/${ID}`)
     // eslint-disable-next-line no-unused-expressions
     expect(res.body.status).to.be.ok;
